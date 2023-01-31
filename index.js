@@ -1,7 +1,34 @@
 const express = require('express');
+const morgan = require('morgan');
 const app = express();
 
+// custom token
+morgan.token('bodyJSON', (request, resolve) => {
+  return JSON.stringify(request.body)
+})
+
+// custom console messages
+app.use(morgan((tokens, request, resolve) => {
+  return tokens.method(request, resolve) !== 'POST'
+    ? [tokens.method(request, resolve),
+       tokens.url(request, resolve),
+       tokens.res(request, resolve, 'content-length'),
+       '-',
+       tokens['response-time'](request, resolve),
+       'ms'
+      ].join(' ')
+    : [tokens.method(request, resolve),
+      tokens.url(request, resolve),
+      tokens.res(request, resolve, 'content-length'),
+      '-',
+      tokens['response-time'](request, resolve),
+      'ms',
+      tokens.bodyJSON(request, resolve)
+     ].join(' ')
+}))
+
 app.use(express.json())
+
 
 let persons = [
   {
@@ -75,6 +102,8 @@ app.delete('/api/persons/:id', (request, response) => {
 
 app.post('/api/persons', (request, response) => {
   const body = request.body;
+
+  console.log('body', body);
 
   if (!body.name) {
     response.status(404).json({
