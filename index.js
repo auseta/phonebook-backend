@@ -3,7 +3,7 @@ const morgan = require('morgan');
 const cors = require('cors');
 const app = express();
 
-app.use(cors())
+app.use(cors());
 
 // custom token
 morgan.token('bodyJSON', (request, resolve) => {
@@ -31,7 +31,7 @@ app.use(morgan((tokens, request, resolve) => {
 }))
 
 app.use(express.json())
-
+app.use(express.static('build'));
 
 let persons = [
   {
@@ -68,6 +68,10 @@ const generateRandomId = () => {
   const randomId = Math.round(Math.random() * 1000)
   return randomId
 }
+
+app.get('/', (request, response) => {
+  response.send('<h1>Welcome to my Phonebook API REST</h1>')
+})
 
 app.get('/info', (request, response) => {
   response.send(`
