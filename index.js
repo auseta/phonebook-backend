@@ -69,10 +69,6 @@ const generateRandomId = () => {
   return randomId
 }
 
-app.get('/', (request, response) => {
-  response.send('<h1>Welcome to my Phonebook API REST</h1>')
-})
-
 app.get('/info', (request, response) => {
   response.send(`
     <p><b>Phonebook has info for ${getPersonsAmount()} persons.</b></p>
