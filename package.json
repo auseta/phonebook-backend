@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:ui": "shx rm -rf build && cd C:/Users/augus/OneDrive/Escritorio/FullstackOpen/part2/phonebook && npm run build && cp -r build C:/Users/augus/OneDrive/Escritorio/FullstackOpen/part3/phonebook-backend",
+    "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push"
   },
   "author": "Augusto Seta",
   "license": "MIT",
@@ -15,7 +17,8 @@
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "mongoose": "^6.9.1",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "shx": "^0.3.4"
   },
   "devDependencies": {
     "nodemon": "^2.0.20"
