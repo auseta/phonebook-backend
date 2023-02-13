@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const uniqueValidator = require('mongoose-unique-validator'); 
 
 mongoose.set('strictQuery', false);
 
@@ -19,6 +20,7 @@ const personSchema = new mongoose.Schema({
     type: String,
     minLength: 3,
     required: true,
+    unique: true,
     validate: {
       validator: function(value) {
         console.log(value);
@@ -36,6 +38,8 @@ const personSchema = new mongoose.Schema({
     required: [true, 'User phone number required']
   },
 })
+
+personSchema.plugin(uniqueValidator)
 
 personSchema.set('toJSON', {
   transform: (document, returnedObject) => {
