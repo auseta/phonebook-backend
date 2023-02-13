@@ -87,16 +87,13 @@ app.post('/api/persons', (request, response, next) => {
     return response.status(400).json({error: 'number is missing'})
   }
 
-  // Person.find({}).then(persons => {
-  //   console.log('persons', persons);
-  //   let uniqueValidator = persons.some(person => person.name === body.name)
-  //   if (uniqueValidator) {
-  //     console.log('name must be unique')
-  //     return response.status(400).json({
-  //       error: 'name must be unique'
-  //     })
-  //   }
-  // })
+  Person.find({}).then(persons => {
+    if (persons.some(person => person.name.toLowerCase() === body.name.trim().toLowerCase())) {
+      return response.status(400).json({
+        error: 'name must be unique'
+      })
+    }
+  })
 
   const person = new Person({
     name: body.name,
