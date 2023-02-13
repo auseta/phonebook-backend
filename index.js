@@ -58,13 +58,9 @@ app.get('/api/persons', (request, response) => {
 app.get('/api/persons/:id', (request, response, next) => {
   Person.findById(request.params.id)
     .then(person => {
-      if (person) {
-        response.json(person)
-      } else {
-        response.status(404).end()
-      }
+      response.json(person)
     })
-    .catch(error => next(error))
+    .catch(error => response.status(404).end())
 })
 
 app.delete('/api/persons/:id', (request, response, next) => {
