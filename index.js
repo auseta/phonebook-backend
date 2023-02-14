@@ -1,30 +1,30 @@
 require('dotenv').config()
-const express = require('express');
-const morgan = require('morgan');
-const cors = require('cors');
-const Person = require('./models/person');
-const app = express();
+const express = require('express')
+const morgan = require('morgan')
+const cors = require('cors')
+const Person = require('./models/person')
+const app = express()
 
-app.use(cors());
+app.use(cors())
 
 // custom token
-morgan.token('bodyJSON', (request, resolve) => {
+morgan.token('bodyJSON', (request) => {
   return JSON.stringify(request.body)
 })
 
 
-app.use(express.static('build'));
+app.use(express.static('build'))
 app.use(express.json())
 // custom console messages
 app.use(morgan((tokens, request, resolve) => {
   return tokens.method(request, resolve) !== 'POST'
     ? [tokens.method(request, resolve),
-       tokens.url(request, resolve),
-       tokens.res(request, resolve, 'content-length'),
-       '-',
-       tokens['response-time'](request, resolve),
-       'ms'
-      ].join(' ')
+      tokens.url(request, resolve),
+      tokens.res(request, resolve, 'content-length'),
+      '-',
+      tokens['response-time'](request, resolve),
+      'ms'
+    ].join(' ')
     : [tokens.method(request, resolve),
       tokens.url(request, resolve),
       tokens.res(request, resolve, 'content-length'),
@@ -32,7 +32,7 @@ app.use(morgan((tokens, request, resolve) => {
       tokens['response-time'](request, resolve),
       'ms',
       tokens.bodyJSON(request, resolve)
-     ].join(' ')
+    ].join(' ')
 }))
 
 const getDate = () => {
@@ -64,7 +64,7 @@ app.get('/api/persons/:id', (request, response, next) => {
       response.status(404).end()
     }
   })
-  .catch(error => next(error))
+    .catch(error => next(error))
 })
 
 app.delete('/api/persons/:id', (request, response, next) => {
@@ -76,15 +76,15 @@ app.delete('/api/persons/:id', (request, response, next) => {
 })
 
 app.post('/api/persons', (request, response, next) => {
-  const body = request.body;
-  console.log(body);
+  const body = request.body
+  console.log(body)
 
   if (!body.name) {
     return response.status(400).json({ error: 'name is missing' })
   }
-  
+
   if (!body.number) {
-    return response.status(400).json({error: 'number is missing'})
+    return response.status(400).json({ error: 'number is missing' })
   }
 
   Person.find({}).then(persons => {
@@ -101,10 +101,10 @@ app.post('/api/persons', (request, response, next) => {
   })
 
   person.save()
-  .then(savedPerson => {
-    response.json(savedPerson)
-  })
-  .catch(error => next(error))
+    .then(savedPerson => {
+      response.json(savedPerson)
+    })
+    .catch(error => next(error))
 
 })
 
@@ -128,15 +128,15 @@ app.put('/api/persons/:id', (request, response, next) => {
 
 })
 
-const unknownEndpoint = (request, response, next) => {
+const unknownEndpoint = (request, response) => {
   return response.status(404).send({ error: 'unknown endpoint' })
 }
 
 app.use(unknownEndpoint)
 
 const errorHandler = (error, request, response, next) => {
-  console.log(error.message);
-  console.log(error.name);
+  console.log(error.message)
+  console.log(error.name)
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' })
   } else if (error.name === 'ValidationError') {
@@ -148,7 +148,8 @@ const errorHandler = (error, request, response, next) => {
 
 app.use(errorHandler)
 
+
 const PORT = process.env.PORT
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`Server is running on port ${PORT}`)
 })
